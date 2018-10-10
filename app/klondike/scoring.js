@@ -5,7 +5,7 @@ angular.module("klondike.scoring", [])
     this.score = 0;
 
     this.newGame = function () {
-      this.score = 0;
+      this.score = 11;
     };
     this.tableauCardTurnedUp = function () {
       this.score += 5;

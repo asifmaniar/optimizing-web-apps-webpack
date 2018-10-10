@@ -4,6 +4,7 @@
   "dependencies": {},
   "devDependencies": {
     "bower": "^1.8.2",
+    "cross-env": "^5.2.0",
     "eslint": "^4.9.0",
     "http-server": "^0.10.0",
     "jasmine-core": "^2.8.0",
@@ -12,6 +13,7 @@
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0",
     "karma-junit-reporter": "^1.2.0",
+    "nodemon": "^1.18.4",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9"
@@ -19,7 +21,7 @@
   "scripts": {
     "build": "webpack",
     "watch": "npm run build -- --watch",
-    "start": "webpack-dev-server --open",
+    "start": "nodemon -w webpack.config.js -x webpack-dev-server -- --env development",
     "postinstall": "node node_modules/bower/bin/bower install",
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
