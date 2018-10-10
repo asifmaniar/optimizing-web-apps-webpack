@@ -1,31 +1,38 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const isDevelopment = true;
 
-console.log(`This is a ${isDevelopment ? "development" : "production"} build`);
+module.exports = function (env) {
 
-const baseConfig = {
-    entry: './app/app.js',
-    output: {
-        path : path.resolve(__dirname, 'app/dist/'),
-        filename: 'app.bundle.js',
-        publicPath :  '/dist/'
-    },
-    devServer: {
-        contentBase :  path.resolve(__dirname, 'app'),
-        watchContentBase : false,
-        hotOnly: true
-    },
-    plugins: [
+    const isDevelopment = env === 'development';
 
-    ],
-    mode : 'development',
-    watch: true
+    console.log(`This is a ${isDevelopment ? "development" : "production"} build`);
+
+    const baseConfig = {
+        entry: './app/app.js',
+        output: {
+            path: path.resolve(__dirname, 'app/dist/'),
+            filename: 'app.bundle.js',
+            publicPath: '/dist/'
+        },
+        devServer: {
+            contentBase: path.resolve(__dirname, 'app'),
+            watchContentBase: false,
+            hotOnly: true
+        },
+        plugins: [
+            new webpack.DefinePlugin({
+                ENV_IS_DEVELOPMENT: isDevelopment,
+                ENV_IS: JSON.stringify(env),
+            }),
+        ]
+    }
+
+    if (isDevelopment) {
+        baseConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+        baseConfig.mode = 'development';
+        baseConfig.watch = true;
+    }
+
+    return baseConfig;
 }
-
-if (isDevelopment) {
-    baseConfig.plugins.push( new webpack.HotModuleReplacementPlugin());
-}
-
-module.exports = baseConfig;
