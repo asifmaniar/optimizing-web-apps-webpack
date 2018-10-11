@@ -7,7 +7,7 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
                 use: [
-                    //'tee-loader?label=after',
+                    'tee-loader?label=after',
                     'babel-loader',
                     /*{
                       loader: 'tee-loader',
@@ -18,5 +18,10 @@ module.exports = {
                 ]
             }
         ]
+    },
+    resolveLoader: {
+        alias: {
+            'tee-loader': path.resolve(__dirname, 'tee-loader.js')
+        }
     }
 };

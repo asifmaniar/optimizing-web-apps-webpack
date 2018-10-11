@@ -37,7 +37,8 @@ module.exports = function (env) {
             plugins: [
                 new webpack.NamedModulesPlugin(),
                 new webpack.HotModuleReplacementPlugin()
-            ]
+            ],
+            devtool : 'source-map'
         };
 
         return merge(
