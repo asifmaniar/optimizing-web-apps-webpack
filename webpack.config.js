@@ -1,59 +1,54 @@
 const path = require('path');
 const webpack = require('webpack');
-
+const merge = require('webpack-merge');
+const babelConfig = require('./configs/babel');
 
 module.exports = function (env) {
 
     const isDevelopment = env === 'development';
-
     console.log(`This is a ${isDevelopment ? "development" : "production"} build`);
 
     const baseConfig = {
         entry: './app/app.js',
         output: {
-            path: path.resolve(__dirname, 'app/dist/'),
+            path: path.resolve(__dirname, 'app/dist'),
             filename: 'app.bundle.js',
-            publicPath: '/dist/'
-        },
-        devServer: {
-            contentBase: path.resolve(__dirname, 'app'),
-            watchContentBase: false,
-            hotOnly: true,
-            overlay: true
-        },
-        module :{
-            rules :[
-                {
-                    test: /\.js$/,
-                    exclude : /(node_modules|bower_components)/,
-                    use : {
-                        loader : 'babel-loader',
-                        options: {
-                            presets : [['@babel/preset-env',{
-                                debug:true,
-                                modules: false,
-                                targets : {
-                                    browsers : ['> 1%', 'not IE < 12']
-                                }
-                            }]]
-                        }
-                    }
-                }
-            ]
+            publicPath: '/dist/',
         },
         plugins: [
             new webpack.DefinePlugin({
                 ENV_IS_DEVELOPMENT: isDevelopment,
                 ENV_IS: JSON.stringify(env),
-            }),
+            })
         ]
-    }
+    };
 
     if (isDevelopment) {
-        baseConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-        baseConfig.mode = 'development';
-        baseConfig.watch = true;
-    }
 
-    return baseConfig;
-}
+        const devServerConfig = {
+            devServer: {
+                contentBase: path.resolve(__dirname, 'app'),
+                publicPath: '/dist/',
+                watchContentBase: false,
+                hotOnly: true,
+                overlay: true
+            },
+            mode : 'development',
+            plugins: [
+                new webpack.NamedModulesPlugin(),
+                new webpack.HotModuleReplacementPlugin()
+            ]
+        };
+
+        return merge(
+            baseConfig,
+            devServerConfig
+        );
+    }
+    else {
+        return merge(
+            baseConfig,
+            babelConfig
+        );
+    }
+};
